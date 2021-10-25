@@ -1,5 +1,4 @@
 package com.bridgeday22Addressbook;
-
 import java.util.Scanner;
 
 public class AddressBook 
