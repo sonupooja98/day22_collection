@@ -1,125 +1,141 @@
 package com.bridgeday22Addressbook;
-import java.util.Scanner;
+import java.util.*;
 
-public class AddressBook 
-{
-	//variables
-	private  String FirstName;
-	private String LastName;
-	private String State;
-	private String City;
-	private String Address;
-	private long ZipCode;
-	private long PhoneNO;
-	private String Email;
-	//getters abd setters  for  each variable
-	
-	Scanner userinput = new Scanner(System.in);
+class AddressBookMain {
+	public static Scanner sc = new Scanner(System.in);
+	private static ContactFunctions contactFunctions = new ContactFunctions();
+	public Map<String, ContactFunctions> addressBookListMap = new HashMap<>();
+	private String addressBookName;
 
-	public String getFirstName() {
-		return FirstName;
-	}
-	public void setFirstName(String firstName) {
-		FirstName = firstName;
-	}
-	
-	public String getLastName() {
-		return LastName;
-	}
-	public void setLastName(String lastName) {
-		LastName = lastName;
-	}
-	
-	public String getState() 
-	{
-		return State;
-	}
-	public void setState(String state)
-	{
-		this.State = state;
-	}
-	
-	
-	public String getAddress() {
-		return Address;
-	}
-	public void setAddress(String address) {
-		this.Address = address;
-	}
-	public Long getZipCode() {
-		return ZipCode;
-	}
-	public void setZipCode(Long zipCode) {
-		ZipCode = zipCode;
-	}
-	public Long getPhoneNO() {
-		return PhoneNO;
-	}
-	public void setPhoneNO(Long phoneNO) {
-		PhoneNO = phoneNO;
-	}
-	public String getEmail() {
-		return Email;
-	}
-	public void setEmail(String email) {
-		Email=email;
-	}
-		
-	public String getCity() {
-		return City;
-	}
-	public void setCity(String city) {
-		City = city;
-	}
-	
-	public void display()
-	{
-		    System.out.println("Enter a first name: ");
-		    setFirstName(userinput.nextLine()); 
-		
-		    System.out.println("Enter a last name: ");
-		    setLastName(userinput.nextLine()); 
-		    
-		    System.out.println("Enter a state: ");
-		    setState(userinput.next());
-		    
-		    System.out.println("Enter a city: ");
-		    setCity(userinput.next());
-			  
-		    
-		    
-		    System.out.println("Enter a address: ");
-		    setAddress(userinput.next());
-		   
-		    System.out.println("Enter a zipcode: ");
-		    setZipCode(userinput.nextLong());
-		    
-		    
-		    System.out.println("Enter a phoneno: ");
-		    setPhoneNO(userinput.nextLong());
-		   
-		    System.out.println("Enter a email: ");
-		    setEmail(userinput.next());
-		    
-		    
-		    
-		    System.out.println("name:\t" + this.getFirstName());
-		    System.out.println("last name:\t" + this.getLastName());
-		    System.out.println("state:\t" + this.getState());
-		    System.out.println("zipcode:\t" + this.getZipCode());
-		    System.out.println("city:\t" + this.getCity());
-		    System.out.println("phone_no:\t" + this.getPhoneNO());
-		    System.out.println("email:\t" + this.getEmail());
-		    System.out.println("email:\t" + this.getEmail());
-					
-	
-	}
-	
-	public static void main(String[] args)
-	{
+	//Add new AddressBook
+	public void addAddressBook(String bookName) {
 
-		 AddressBook user1 = new  AddressBook();//usecase 1 displainf contact book for user
-		 user1.display();
+		boolean flag = true;
+
+		while (flag) {
+			System.out.println( "1] Add Contact\n" + "2] Display\n"
+					+ "3] Edit contact\n" + "4] Delete Contact\n" + "5] Exit\n" + "Enter your Choice\n");
+			int option = sc.nextInt();
+
+			switch (option) {
+			case 1:
+
+				System.out.println("enter no of contacts to be added");
+				int noOfContacts = sc.nextInt();
+				for (int i = 0; i < noOfContacts; i++) {
+					contactFunctions.addContactDetails();
+				}
+				addressBookListMap.put(addressBookName, contactFunctions);
+				System.out.println("Address Book Added Successfully");
+				break;
+
+			case 2:
+				System.out.println("Enter the Person First name to Display ");
+				String Name = sc.next();
+
+				boolean list = contactFunctions.Display(Name);
+				if (list) {
+					System.out.println("Displayed the Contact");
+				} else {
+					System.out.println(" Cannot be Displayed");
+				}
+
+				break;
+
+			case 3:
+				System.out.println("Enter the Person First name to edit details: ");
+				String personName = sc.next();
+
+				boolean listEdited = contactFunctions.editContactDetails(personName);
+				if (listEdited) {
+					System.out.println("List Edited Successfully");
+				} else {
+					System.out.println("List Cannot be Edited");
+				}
+
+				break;
+			case 4:
+				System.out.println("Enter the Contact to be deleted:");
+				String firstName = sc.next();
+				boolean listDeleted = contactFunctions.deleteContact(firstName);
+				if (listDeleted) {
+					System.out.println("Deleted Contact from the List");
+				} else {
+					System.out.println("List Cannot be Deleted");
+				}
+				break;
+			case 5:
+				flag = false;
+				break;
+
+			}
+
+		}
+
 	}
-				
-}		
+	//main method 
+	public static void main(String[] args) {
+		AddressBookMain addressBookMain = new AddressBookMain();
+		boolean flag = true;
+		while (flag) {
+			System.out.println("Enter your choice");
+			System.out.println("Select an option\n" + "1] Add New Address Book\n"
+					+ "2] Find Duplicate Entry in Address Book\n" + "3]Search Contact from a city\n"
+					+ "4]Search Contact from a State\n" + "5]Exit\n" + "Enter your Choice\n");
+			int option = sc.nextInt();
+			switch (option) {
+			case 1: {
+				System.out.println("Enter the Name of Address Book: ");
+				String addressBookName = sc.next();
+				if (addressBookMain.addressBookListMap.containsKey(addressBookName)) {
+					System.out.println("The Address book Already Exists");
+					break;
+				} else {
+					addressBookMain.addAddressBook(addressBookName);
+					break;
+				}
+			}
+			case 2:
+				for (Map.Entry<String, ContactFunctions> entry : addressBookMain.addressBookListMap.entrySet()) {
+					ContactFunctions value = entry.getValue();
+					System.out.println("Address Book Name: " + entry.getKey());
+					value.checkDuplicate();
+				}
+			case 3:
+				System.out.println("Enter Name of City: ");
+				String CityName = sc.next();
+				addressBookMain.searchPersonByCity(CityName);
+				break;
+
+			case 4: {
+				System.out.println("Enter Name of State: ");
+				String StateName = sc.next();
+				addressBookMain.searchPersonByState(StateName);
+				break;
+			}
+
+			case 5:
+				flag = false;
+				break;
+			}
+		}
+	}
+
+	private void searchPersonByState(String stateName) {
+		// TODO Auto-generated method stub
+		for (Map.Entry<String, ContactFunctions> entry : addressBookListMap.entrySet()) {
+			ContactFunctions value = entry.getValue();
+			System.out.println("The Address Book: " + entry.getKey());
+			value.getPersonNameByState(stateName);
+		}
+	}
+
+	private void searchPersonByCity(String cityName) {
+		// TODO Auto-generated method stub
+		for (Map.Entry<String, ContactFunctions> entry : addressBookListMap.entrySet()) {
+			ContactFunctions value = entry.getValue();
+			System.out.println("The Address Book: " + entry.getKey());
+			value.getPersonNameByCity(cityName);
+		}
+	}
+}			
